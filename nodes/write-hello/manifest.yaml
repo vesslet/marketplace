@@ -1,0 +1,5 @@
+name: write-hello
+description: writes "Привет {name}" into ~/.vesslet — demonstrates a launch-time param (via reads) and ordinary filesystem access (not a sandbox)
+command: ./run.sh
+reads: [name]
+writes: [greeting]

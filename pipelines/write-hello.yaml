@@ -1,0 +1,15 @@
+name: write-hello
+start: start
+end: [end]
+nodes:
+  - id: start
+    type: noop
+  - id: write-hello
+    type: write-hello
+  - id: end
+    type: noop
+edges:
+  - from: start
+    to: write-hello
+  - from: write-hello
+    to: end
