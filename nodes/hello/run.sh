@@ -1,5 +1,5 @@
 #!/bin/sh
-# Global custom node — lives in ~/.vesslet/nodes/write-hello/, so it never
+# Global custom node — lives in ~/.vesslet/nodes/hello/, so it never
 # prompts for approval (only project-local nodes do). Reads "name" off the
 # request's state (declared in manifest.yaml's "reads") — this is what a
 # launch-time --param name=... (CLI) or the dashboard's Params rows (UI)
