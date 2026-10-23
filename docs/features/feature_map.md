@@ -1,10 +1,11 @@
 # Feature Map
 
-| Slug | Feature | Components |
-|------|---------|------------|
-| hello | Greeting example: takes a name at launch and produces a greeting | `nodes/hello`, `pipelines/hello.yaml` |
+| Slug | Feature | Key components | Docs |
+|------|---------|----------------|------|
+| hello ✓ | Greeting example: produces a greeting for a given name | `nodes/hello`, `pipelines/hello.yaml` | spec.md (arch.md, test.md missing) |
 
 ## hello
 
-**Boundary:** the `hello` node and the `hello` pipeline that runs it between the built-in start and end steps.
-**Dependencies:** platform launch-time parameters; the user's Vesslet home folder.
+**Boundary:** the `hello` node (takes a name, produces a greeting and leaves a copy on the local machine) and the `hello` pipeline that runs it between the built-in start and end steps.
+
+**Dependencies:** the Vesslet platform supplies the `name` launch parameter and runs the node.

@@ -1,38 +1,62 @@
 # Feature: hello
 
-## Summary
-An example feature that greets a person by name. The name is supplied when a run is launched; the greeting is shown in the run's results and also kept for the user as a file in their Vesslet home folder.
+## Description
+
+An example feature that demonstrates a launch-time parameter and ordinary local file access. Given a name, it produces the greeting "Привет {name}", records it on the local machine and makes it visible as a result of the run.
 
 ## Business Rules
 
 | # | Rule | Priority |
 |---|------|----------|
-| BR-1 | The greeting MUST be the Russian word «Привет» followed by a space and the supplied name. | MUST |
-| BR-2 | The name MUST come from the launch-time parameter `name`. | MUST |
-| BR-3 | The greeting MUST be available as the run's `greeting` result, visible in the run timeline. | MUST |
-| BR-4 | The greeting MUST also be stored for the user as a text file `hello.txt` in their Vesslet home folder, replacing any earlier greeting. | MUST |
-| BR-5 | If no name is supplied, the greeting SHOULD still be produced, with an empty name. [ASSUMED] | SHOULD |
-| BR-6 | The feature MUST be runnable as a pipeline that goes from start, through the greeting step, to end. | MUST |
-| BR-7 | The greeting step MAY be run without an approval prompt, because it is installed globally rather than project-locally. | MAY |
+| BR-1 | The greeting is the word "Привет", a space, then the supplied name. | MUST |
+| BR-2 | The name is taken from the `name` parameter provided at launch. | MUST |
+| BR-3 | The greeting is returned as the run's `greeting` result, so it is visible in the run's timeline. | MUST |
+| BR-4 | A copy of the greeting is saved on the local machine in the user's Vesslet data location, replacing any previously saved greeting. | MUST |
+| BR-5 | If no name is supplied, the greeting is produced with an empty name ("Привет ") and the run still succeeds. [ASSUMED] | SHOULD |
+| BR-6 | The `hello` pipeline runs the greeting step once, between its start and end steps. | MUST |
+| BR-7 | The run reports success even when the local copy could not be saved (for example, the Vesslet data location does not exist); the greeting is still returned. [ASSUMED] | SHOULD |
 
 ## Use Cases
 
 ### UC-1: Greet a person
-**Actor:** user launching a run
-**Flow:** the user launches the `hello` pipeline with `name=Анна` → the greeting step runs → the run reports `greeting = "Привет Анна"` and the file `hello.txt` contains the same text.
+**Actor:** Platform user
+**Precondition:** The `hello` pipeline is available.
+**Flow:**
+1. The user launches the pipeline with a `name` parameter.
+2. The greeting step produces "Привет {name}".
+3. The greeting is saved locally and shown as the run's `greeting` result.
+**Result:** The user sees the greeting in the run and finds it saved locally.
 
 ### UC-2: Launch without a name
-**Actor:** user launching a run
-**Flow:** the user launches the pipeline without `name` → the run completes and the greeting is "Привет " (empty name). [ASSUMED]
+**Actor:** Platform user
+**Precondition:** The `hello` pipeline is available.
+**Flow:**
+1. The user launches the pipeline without a `name` parameter.
+2. The greeting step produces "Привет " with an empty name.
+**Result:** The run completes successfully with the greeting for an empty name.
+
+### Edge cases (observed in the code)
+
+- A name containing an apostrophe (e.g. `O'Brien`) or a line break: the local copy is written (replacing the previous one), but the greeting step fails and returns no `greeting` result. The spec does not allow this — see Uncertainties.
+- A `name` supplied as `null` produces "Привет None".
+- A name containing a backslash is not taken literally: an escape such as `a\tb` becomes a real tab in both the result and the local copy, and a name ending in a backslash makes the greeting step fail (the local copy is still written).
 
 ## Acceptance Criteria
 
-- [ ] AC-1: Launching with `name=Анна` yields the result `greeting` = "Привет Анна". (BR-1, BR-2, BR-3)
-- [ ] AC-2: After a run, `hello.txt` in the Vesslet home folder contains "Привет Анна". (BR-4)
-- [ ] AC-3: A second run with another name leaves only the new greeting in `hello.txt`. (BR-4)
-- [ ] AC-4: Launching without a name completes successfully. (BR-5)
-- [ ] AC-5: The pipeline runs start → hello → end and finishes. (BR-6)
+- [ ] AC-1: Launching with `name=Анна` yields the result `greeting` = "Привет Анна" (BR-1, BR-2, BR-3).
+- [ ] AC-2: After a run, the local saved greeting is the single line "Привет Анна" (BR-4).
+- [ ] AC-3: A second run with another name replaces the previously saved greeting (BR-4).
+- [ ] AC-4: Launching without a name completes successfully with the greeting "Привет " (BR-5).
+- [ ] AC-5: The pipeline run goes start → greeting → end and completes (BR-6).
+- [ ] AC-6: When the Vesslet data location does not exist, the run still completes with `greeting` = "Привет {name}" and no local copy is saved (BR-7).
 
-## Open Questions
-- [NEEDS CLARIFICATION] Is the fixed Russian greeting word intended, or should it depend on the user's language?
-- [NEEDS CLARIFICATION] Should an empty name be rejected instead of producing "Привет "?
+## Uncertainties
+
+- [ASSUMED] BR-5: behavior without a name is not a deliberate decision; it follows from the implementation.
+- [NEEDS CLARIFICATION] The fixed Russian wording "Привет" — should the language be configurable?
+- [ASSUMED] BR-7: success despite a failed local save follows from the implementation (the write error is not checked); it is not a stated decision.
+- [NEEDS CLARIFICATION] Names with an apostrophe, a line break or a trailing backslash make the greeting step fail, while UC-1 implies any name works. Is this a defect to fix in `nodes/hello/run.sh`, or should names be restricted?
+- [NEEDS CLARIFICATION] Should a `null` name give "Привет " like a missing name (BR-5), instead of "Привет None"?
+- Gap: `arch.md` and `test.md` for this feature do not exist, and the repository has no automated tests, so no rule is covered by a test.
+
+<!-- synced: 2026-10-23 -->
