@@ -14,7 +14,6 @@ An example feature that demonstrates a launch-time parameter and ordinary local 
 | BR-4 | A copy of the greeting is saved on the local machine in the user's Vesslet data location, replacing any previously saved greeting. | MUST |
 | BR-5 | If no name is supplied, the greeting is produced with an empty name ("Привет ") and the run still succeeds. [ASSUMED] | SHOULD |
 | BR-6 | The `hello` pipeline runs the greeting step once, between its start and end steps. | MUST |
-| BR-7 | The greeting step runs without asking for approval because it is installed globally. [ASSUMED] | MAY |
 
 ## Use Cases
 
@@ -46,5 +45,4 @@ An example feature that demonstrates a launch-time parameter and ordinary local 
 ## Uncertainties
 
 - [ASSUMED] BR-5: behavior without a name is not a deliberate decision; it follows from the implementation.
-- [ASSUMED] BR-7: approval-free execution is a platform property for globally installed nodes.
 - [NEEDS CLARIFICATION] The fixed Russian wording "Привет" — should the language be configurable?
