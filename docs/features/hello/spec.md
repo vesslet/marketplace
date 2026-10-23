@@ -39,6 +39,7 @@ An example feature that demonstrates a launch-time parameter and ordinary local 
 
 - A name containing an apostrophe (e.g. `O'Brien`) or a line break: the local copy is written (replacing the previous one), but the greeting step fails and returns no `greeting` result. The spec does not allow this — see Uncertainties.
 - A `name` supplied as `null` produces "Привет None".
+- A name containing a backslash is not taken literally: an escape such as `a\tb` becomes a real tab in both the result and the local copy, and a name ending in a backslash makes the greeting step fail (the local copy is still written).
 
 ## Acceptance Criteria
 
@@ -54,7 +55,7 @@ An example feature that demonstrates a launch-time parameter and ordinary local 
 - [ASSUMED] BR-5: behavior without a name is not a deliberate decision; it follows from the implementation.
 - [NEEDS CLARIFICATION] The fixed Russian wording "Привет" — should the language be configurable?
 - [ASSUMED] BR-7: success despite a failed local save follows from the implementation (the write error is not checked); it is not a stated decision.
-- [NEEDS CLARIFICATION] Names with an apostrophe or a line break make the greeting step fail, while UC-1 implies any name works. Is this a defect to fix in `nodes/hello/run.sh`, or should names be restricted?
+- [NEEDS CLARIFICATION] Names with an apostrophe, a line break or a trailing backslash make the greeting step fail, while UC-1 implies any name works. Is this a defect to fix in `nodes/hello/run.sh`, or should names be restricted?
 - [NEEDS CLARIFICATION] Should a `null` name give "Привет " like a missing name (BR-5), instead of "Привет None"?
 - Gap: `arch.md` and `test.md` for this feature do not exist, and the repository has no automated tests, so no rule is covered by a test.
 
