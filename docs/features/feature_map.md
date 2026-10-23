@@ -1,8 +1,8 @@
 # Feature Map
 
-| Slug | Feature | Key components |
-|------|---------|----------------|
-| hello | Greeting example: produces a greeting for a given name | `nodes/hello`, `pipelines/hello.yaml` |
+| Slug | Feature | Key components | Docs |
+|------|---------|----------------|------|
+| hello ✓ | Greeting example: produces a greeting for a given name | `nodes/hello`, `pipelines/hello.yaml` | spec.md (arch.md, test.md missing) |
 
 ## hello
 
